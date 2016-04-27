@@ -43,7 +43,7 @@ x = ffmod.load_data()
 
 # load lable data directly from file
 # y = np.loadtxt("data/ff_labels.csv", dtype=int, delimiter=',')
-y = np.loadtxt("data/ff_7_labels.csv", dtype=int, delimiter=',')
+y = np.loadtxt("../data/ff_7_labels.csv", dtype=int, delimiter=',')
 
 # print("y.dim= ", y.ndim, "y.shape=", y.shape)
 
