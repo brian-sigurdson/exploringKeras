@@ -13,7 +13,7 @@ def load_data():
 	# not generalizing at the moment
 	
 	# print("loading data...")
-	x = np.loadtxt("./data/ff_x_data.csv", delimiter=',')
+	x = np.loadtxt("../../data/ff_x_data.csv", delimiter=',')
 	# print("x.dim= ", x.ndim, "x.shape=", x.shape)
 	# print("len(x.shape)=", len(x.shape))
 	# print("x.shape = ", x.shape)
