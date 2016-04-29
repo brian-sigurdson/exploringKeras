@@ -13,7 +13,13 @@ def load_data():
 	# not generalizing at the moment
 	
 	# print("loading data...")
-	x = np.loadtxt("./../data/ff_x_data.csv", delimiter=',')
+	
+	# data without z-scored weather data
+	# x = np.loadtxt("./../data/ff_x_data.csv", delimiter=',')
+	
+	# data with z-scored weather data: zFFMC	zDMC	zDC	zISI	ztemp	zRH	zwind	zrain
+	x = np.loadtxt("./../data/ff_x_zscored_data.csv", delimiter=',')
+	
 	# print("x.dim= ", x.ndim, "x.shape=", x.shape)
 	# print("len(x.shape)=", len(x.shape))
 	# print("x.shape = ", x.shape)
