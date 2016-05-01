@@ -128,8 +128,13 @@ X_train = X_train.reshape(X_train.shape[0], 1, img_rows, img_cols)
 X_test = X_test.reshape(X_test.shape[0], 1, img_rows, img_cols)
 X_train = X_train.astype('float32')
 X_test = X_test.astype('float32')
-X_train /= 255
-X_test /= 255
+
+# division by 255 is common with grey scale images to transform the pixel
+# values into the range 0..255.
+# unfortunately, this did not improve the accuracy
+# X_train /= 255
+# X_test /= 255
+
 print('X_train shape:', X_train.shape)
 print('X_test shape:', X_test.shape)
 
