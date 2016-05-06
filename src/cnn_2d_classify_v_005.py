@@ -28,16 +28,23 @@ from keras.utils import np_utils
 'function to load forest fire data'
 import modules.cnn_2d_module as cnn2d
 
+# print file name
+print("running cnn_2d_classify_v_005.py")
 
 ######################################################################
 # define some variables to reuse
+######################################################################
 nb_epoch = 300
 batch_size = 32
 
 # load lable data directly from file
-num_labels = 5
+num_labels = 2
 labels_file = "../data/ff_" + str(num_labels) + "_labels.csv"
 y, nb_classes, nb_folds = cnn2d.load_y_data(labels_file)
+
+# specify data file
+# data_file = "./../data/ff_x_zscored_data.csv"
+data_file = "./../data/ff_x_normalized_data.csv"
 
 hidden_activation = 'relu'
 output_activation = 'softmax'
@@ -47,8 +54,8 @@ loss_func = 'categorical_crossentropy'
 # loss_func = 'mse'
 
 # input image dimensions
-img_rows = 1
-img_cols = 29
+img_rows = 32
+img_cols = 32
 
 # number of convolutional filters to use
 nb_filters = 32
@@ -58,10 +65,7 @@ nb_pool = 2
 
 # convolution kernel size
 nb_col = 3
-nb_row = 1
-
-# dense layer
-dense_output = 29
+nb_row = 3
 ######################################################################
 
 
@@ -82,6 +86,7 @@ X_test = X_test.reshape(X_test.shape[0], 1, img_rows, img_cols)
 X_train = X_train.astype('float32')
 X_test = X_test.astype('float32')
 
+
 print('X_train shape:', X_train.shape)
 print('X_test shape:', X_test.shape)
 
@@ -96,18 +101,25 @@ Y_test = np_utils.to_categorical(y_test, nb_classes)
 
 model = Sequential()
 
+# follow as close as I can to the illustration in Haykin text, pg. 246
 # layer
-model.add(Convolution2D(nb_filters, nb_row, nb_col,
+model.add(Convolution2D(6, 28, 28,
                         border_mode='valid',
                         input_shape=(1, img_rows, img_cols)))
 model.add(Activation(hidden_activation))
 
 # layer
-model.add(Convolution2D(nb_filters, nb_row, nb_col))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+
+# layer
+model.add(Convolution2D(16, 10, 10))
 model.add(Activation(hidden_activation))
 
 # layer
-model.add(MaxPooling2D(pool_size=(nb_pool, nb_pool)))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+
+########################################
+# new stuff i'm adding, see if it will work
 
 # layer
 model.add(Dropout(0.25))
@@ -116,11 +128,13 @@ model.add(Dropout(0.25))
 model.add(Flatten())
 
 # layer
-model.add(Dense(dense_output))
+model.add(Dense(128))
 model.add(Activation(hidden_activation))
 
 # layer
 model.add(Dropout(0.5))
+
+#########################################
 
 # layer
 model.add(Dense(nb_classes))
@@ -135,4 +149,5 @@ score = model.evaluate(X_test, Y_test, verbose=0)
 
 print('Test score:', score[0])
 print('Test accuracy:', score[1])
+
 

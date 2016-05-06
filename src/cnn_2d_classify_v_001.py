@@ -26,34 +26,54 @@ from keras.utils import np_utils
 
 
 'function to load forest fire data'
-import modules.cnn_2d_module as ffmod
+import modules.cnn_2d_module as cnn2d
 
-# parameters
-'''
-rows = 517
-cols = 30
-'''
+# print file name
+print("running cnn_2d_classify_v_001.py")
 
+######################################################################
+# define some variables to reuse
+######################################################################
+nb_epoch = 300
+batch_size = 32
 
-print('Loading data...')
+# load lable data directly from file
+num_labels = 4
+labels_file = "../data/ff_" + str(num_labels) + "_labels.csv"
+y, nb_classes, nb_folds = cnn2d.load_y_data(labels_file)
+
+# specify data file
+data_file = "./../data/ff_x_zscored_data.csv"
+# data_file = "./../data/ff_x_normalized_data.csv"
+	
+hidden_activation = 'relu'
+output_activation = 'softmax'
+# for a multi-class classification problem
+loss_func = 'categorical_crossentropy'
+# for a mean squared error regression problem
+# loss_func = 'mse'
+
+# input image dimensions
+img_rows = 32
+img_cols = 32
+
+# number of convolutional filters to use
+nb_filters = 32
+
+# size of pooling area for max pooling
+nb_pool = 2
+
+# convolution kernel size
+nb_col = 3
+nb_row = 3
+######################################################################
 
 
 # 1) loading data via a module to facilitate some reshaping of the data
-x = ffmod.load_data()
-# print("x.dim= ", x.ndim, "x.shape=", x.shape)
-
-# load lable data directly from file
-# y = np.loadtxt("../data/ff_labels.csv", dtype=int, delimiter=',')
-y = np.loadtxt("../data/ff_8_labels.csv", dtype=int, delimiter=',')
-
-# print("y.dim= ", y.ndim, "y.shape=", y.shape)
-
+x = cnn2d.load_data_517_1_32_32(data_file)
 
 # 2) split it with scikit-learn
-skf = StratifiedKFold(y, n_folds=2)
-
-# print('len(skf) = ', len(skf))
-# print("skf = ", skf)
+skf = StratifiedKFold(y, n_folds=nb_folds)
 
 
 for train_index, test_index in skf:
@@ -93,35 +113,7 @@ print('len(y_test', len(y_test))
 using 
 conv2D https://github.com/fchollet/keras/blob/master/examples/mnist_cnn.py
 as a guide
-
-(following note is from original file)
-Trains a simple convnet on the MNIST dataset.
-Gets to 99.25% test accuracy after 12 epochs
-(there is still a lot of margin for parameter tuning).
-16 seconds per epoch on a GRID K520 GPU.
 '''
-
-
-# new parameters
-batch_size = 128
-
-
-# eight classes from = 0..7
-nb_classes = 8
-nb_epoch = 12
-
-# input image dimensions
-img_rows = 32
-img_cols = 32
-
-# number of convolutional filters to use
-nb_filters = 32
-
-# size of pooling area for max pooling
-nb_pool = 2
-
-# convolution kernel size
-nb_conv = 3
 
 
 X_train = X_train.reshape(X_train.shape[0], 1, img_rows, img_cols)
@@ -149,26 +141,41 @@ Y_test = np_utils.to_categorical(y_test, nb_classes)
 
 model = Sequential()
 
-model.add(Convolution2D(nb_filters, nb_conv, nb_conv,
+# layer
+model.add(Convolution2D(32, 3, 3,
                         border_mode='valid',
                         input_shape=(1, img_rows, img_cols)))
-model.add(Activation('relu'))
-model.add(Convolution2D(nb_filters, nb_conv, nb_conv))
-model.add(Activation('relu'))
-model.add(MaxPooling2D(pool_size=(nb_pool, nb_pool)))
+model.add(Activation(hidden_activation))
+
+# layer
+model.add(Convolution2D(32, 3, 3))
+model.add(Activation(hidden_activation))
+
+# layer
+model.add(MaxPooling2D(pool_size=(2, 2)))
+
+# layer
 model.add(Dropout(0.25))
 
+# layer
 model.add(Flatten())
-model.add(Dense(128))
-model.add(Activation('relu'))
-model.add(Dropout(0.5))
-model.add(Dense(nb_classes))
-model.add(Activation('softmax'))
 
-model.compile(loss='categorical_crossentropy', optimizer='adadelta', metrics=['accuracy'])
+# layer
+model.add(Dense(128))
+model.add(Activation(hidden_activation))
+
+# layer
+model.add(Dropout(0.5))
+
+# layer
+model.add(Dense(nb_classes))
+model.add(Activation(output_activation))
+
+model.compile(loss=loss_func, optimizer='adadelta', metrics=['accuracy'])
 
 model.fit(X_train, Y_train, batch_size=batch_size, nb_epoch=nb_epoch,
-          verbose=1, validation_data=(X_test, Y_test))
+          verbose=0, validation_data=(X_test, Y_test))
+          
 score = model.evaluate(X_test, Y_test, verbose=0)
 
 print('Test score:', score[0])
