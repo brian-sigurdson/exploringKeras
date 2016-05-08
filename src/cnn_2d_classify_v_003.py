@@ -36,6 +36,7 @@ print("running cnn_2d_classify_v_003.py")
 ######################################################################
 nb_epoch = 300
 batch_size = 32
+print("epochs = ", nb_epoch)
 
 # load lable data directly from file
 num_labels = 2
@@ -43,8 +44,11 @@ labels_file = "../data/ff_" + str(num_labels) + "_labels.csv"
 y, nb_classes, nb_folds = cnn2d.load_y_data(labels_file)
 
 # specify data file
-data_file = "./../data/ff_x_zscored_data.csv"
+# specify data file
+# data_file = "./../data/ff_x_zscored_data.csv"
 # data_file = "./../data/ff_x_normalized_data.csv"
+data_file = "./../data/ff_x_normalized_data_2.csv"
+# data_file = "./../data/ff_x_normalized_data_1.csv"
 
 hidden_activation = 'relu'
 output_activation = 'softmax'

@@ -36,6 +36,7 @@ print("running cnn_2d_classify_v_004.py")
 ######################################################################
 nb_epoch = 300
 batch_size = 32
+print("epochs = ", epochs)
 
 # load lable data directly from file
 num_labels = 2

@@ -33,6 +33,7 @@ import modules.cnn_2d_module as cnn2d
 # define some variables to reuse
 nb_epoch = 300
 batch_size = 32
+print("epochs = ", epochs)
 
 # load lable data directly from file
 num_labels = 5

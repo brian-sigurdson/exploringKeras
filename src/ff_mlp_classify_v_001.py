@@ -15,8 +15,9 @@ print("running ff_mlp_classify_v_001.py")
 #######################################################################
 # define some variables to reuse
 #######################################################################
-epochs = 300
+epochs = 3000
 batch_size = 32
+print("epochs = ", epochs)
 
 # specify label file
 num_labels = 3
@@ -24,11 +25,13 @@ labels_file = "../data/ff_" + str(num_labels) + "_labels.csv"
 
 # specify data file
 # data_file = "./../data/ff_x_zscored_data.csv"
-data_file = "./../data/ff_x_normalized_data.csv"
+# data_file = "./../data/ff_x_normalized_data.csv"
+# data_file = "./../data/ff_x_normalized_data_2.csv"
+data_file = "./../data/ff_x_normalized_data_1.csv"
 
-# hidden_activation = 'relu'
-#hidden_activation = 'tanh'
-hidden_activation = 'sigmoid'
+hidden_activation = 'relu'
+# hidden_activation = 'tanh'
+# hidden_activation = 'sigmoid'
 
 # i think i need to do more than just change the output layer and loss function to 
 # change from classification to regression problem
@@ -50,12 +53,12 @@ data, nb_classes = ffmlp.load_data(labels_file, data_file)
 #######################################################################
 
 '''
-# 2 layer networks - many
+# 1: Two layer networks - many
 model, losses = ffmlp.run_network(
 	labels_file, data_file, hidden_activation, output_activation, loss_func, data=data, 
 	nb_classes=nb_classes, layer1=200, layer2=100, epochs=epochs, 
 	batch=batch_size)
-	
+
 reload(ffmlp)	
 model, losses = ffmlp.run_network(
 	labels_file, data_file, hidden_activation, output_activation, loss_func, data=data, 
@@ -67,9 +70,9 @@ model, losses = ffmlp.run_network(
 	labels_file, data_file, hidden_activation, output_activation, loss_func, data=data, 
 	nb_classes=nb_classes, layer1=50, layer2=25, epochs=epochs, 
 	batch=batch_size)
-
-
-# 3 layer networks - many
+'''
+'''
+# 2: Three layer networks - many
 reload(ffmlp)	
 model, losses = ffmlp.run_network(
 	labels_file, data_file, hidden_activation, output_activation, loss_func, data=data, 
@@ -87,14 +90,15 @@ model, losses = ffmlp.run_network(
 	labels_file, data_file, hidden_activation, output_activation, loss_func, data=data, 
 	nb_classes=nb_classes, layer1=50, layer2=25, layer3=12, 
 	epochs=epochs, batch=batch_size)
-'''	
-
-# 2 layer networks - few
+'''
+'''
+# 3: Two layer networks - few
+reload(ffmlp)	
 model, losses = ffmlp.run_network(
 	labels_file, data_file, hidden_activation, output_activation, loss_func, data=data, 
 	nb_classes=nb_classes, layer1=29, layer2=15, epochs=epochs, 
 	batch=batch_size)
-	
+
 reload(ffmlp)	
 model, losses = ffmlp.run_network(
 	labels_file, data_file, hidden_activation, output_activation, loss_func, data=data, 
@@ -106,9 +110,9 @@ model, losses = ffmlp.run_network(
 	labels_file, data_file, hidden_activation, output_activation, loss_func, data=data, 
 	nb_classes=nb_classes, layer1=20, layer2=15, epochs=epochs, 
 	batch=batch_size)
-
-
-# 3 layer networks - few
+'''
+'''
+# 4: Three layer networks - few
 reload(ffmlp)	
 model, losses = ffmlp.run_network(
 	labels_file, data_file, hidden_activation, output_activation, loss_func, data=data, 
@@ -126,5 +130,19 @@ model, losses = ffmlp.run_network(
 	labels_file, data_file, hidden_activation, output_activation, loss_func, data=data, 
 	nb_classes=nb_classes, layer1=20, layer2=15, layer3=12, 
 	epochs=epochs, batch=batch_size)
+'''
 
-
+# 5: Four layer networks - few 
+reload(ffmlp)	
+model, losses = ffmlp.run_network(
+	labels_file, data_file, hidden_activation, output_activation, loss_func, data=data, 
+	nb_classes=nb_classes, layer1=40, layer2=30, layer3=20, layer4=15,
+	epochs=epochs, batch=batch_size)
+'''
+# 6: Four layer networks - many
+reload(ffmlp)	
+model, losses = ffmlp.run_network(
+	labels_file, data_file, hidden_activation, output_activation, loss_func, data=data, 
+	nb_classes=nb_classes, layer1=250, layer2=125, layer3=60, layer4=30,
+	epochs=epochs, batch=batch_size)
+'''
